@@ -39,3 +39,14 @@ class TestFileOperations(unittest.TestCase):
         self.assertEqual(            
             set(tools.get_files(self._tempDir, True)),
             set(self._files))
+
+class TestNumAbbrev(unittest.TestCase):
+    def test_human(self):
+        self.assertEqual(tools.human(0.2), "0.2")
+        self.assertEqual(tools.human(5), "5 ")
+        self.assertEqual(tools.human(5.3), "5 ")
+        self.assertEqual(tools.human(5352), "5 Thousand")
+        self.assertEqual(tools.human(3.4e6), "3 Million")
+        self.assertEqual(tools.human(7.6e10), "76 Billion")
+        self.assertEqual(tools.human(1.2e14), "120 Trillion")
+        self.assertEqual(tools.human(5e27), "TOO BIG")

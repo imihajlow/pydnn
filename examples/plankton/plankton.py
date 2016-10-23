@@ -1,4 +1,9 @@
 from __future__ import print_function
+from __future__ import division
+from builtins import zip
+from builtins import str
+from builtins import range
+from past.utils import old_div
 __author__ = 'isaac'
 
 from pydnn import neuralnet as nn
@@ -68,12 +73,12 @@ def load_net_and_generate_submission_file(net_name, submission_name):
 def write_confusion_matrices_to_csv_files(experiment, num_images, matrices):
     set_names = ['train', 'valid', 'test']
     labels = train_set.get_labels()
-    files, given_labels = zip(*train_set.get_files(num_images))
+    files, given_labels = list(zip(*train_set.get_files(num_images)))
     for (matrix, mistakes), set_name in zip(matrices, set_names):
         df = pd.DataFrame(matrix, index=labels, columns=labels)
         df.to_csv(join(config['output'], experiment + '_conf_mtrx_' + set_name + '.csv'))
 
-        file_indices, right_indices, wrong_indices = zip(*mistakes)
+        file_indices, right_indices, wrong_indices = list(zip(*mistakes))
         file_names = [files[index] for index in file_indices]
         right_labels = [given_labels[index] for index in file_indices]
         wrong_labels = [labels[index] for index in wrong_indices]
@@ -106,7 +111,7 @@ def analyze_confusion_matrix(matrix_file):
     x.iloc[data] = values           # (I've discovered after some confusion)
     x['bad'] = x.iloc[data].sum(axis=1)
     total_bad = x['bad'].sum()
-    x['pct_bad'] = x['bad'] / x['total']
+    x['pct_bad'] = old_div(x['bad'], x['total'])
 
     top_by_num = x.sort('total', ascending=False)[0:10].index.values
     worst_by_num = x.sort('bad', ascending=False)[0:10].index.values
@@ -133,20 +138,20 @@ def analyze_confusion_matrix(matrix_file):
                 break
 
         # return the top classes for the row
-        return zip(row.iloc[:last_non_zero].index.values, row.iloc[:last_non_zero].values)
+        return list(zip(row.iloc[:last_non_zero].index.values, row.iloc[:last_non_zero].values))
 
     def print_worst(classes):
         for c in classes:
             c_total = x.loc[c, 'total']
             c_bad = x.loc[c, 'bad']
-            c_contribution_to_error = float(c_bad) / total_bad
-            c_fair_share_of_error = c_total / total_predictions
+            c_contribution_to_error = old_div(float(c_bad), total_bad)
+            c_fair_share_of_error = old_div(c_total, total_predictions)
             print('\nclass {}:'.format(c))
             print('total predictions: {}'.format(c_total))
             print('total bad predictions: {}'.format(c_bad))
             print('fair share of error: {:.3%}'.format(c_fair_share_of_error))
             print('contribution to error: {:.3%} ({:.3f} time fair share)'.format(
-                c_contribution_to_error, c_contribution_to_error / c_fair_share_of_error))
+                c_contribution_to_error, old_div(c_contribution_to_error, c_fair_share_of_error)))
             print('most often confused with' + str(most_confused_with(c)))
 
     import matplotlib.pyplot as plt
@@ -272,7 +277,7 @@ def average_submissions(in_files, weights=None):
                 dtype=config['dtype'],
                 delimiter=',',
                 skiprows=1,
-                usecols=range(1, 122)))
+                usecols=list(range(1, 122))))
     # avg = np.mean(subs, axis=0)
     avg = np.average(subs, axis=0, weights=weights)
     out_file = (join(config['input_post'], 'avg_probs_' +

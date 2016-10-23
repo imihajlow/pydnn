@@ -1,5 +1,10 @@
 from __future__ import division
 from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import zip
+from builtins import range
+from builtins import object
 from functools import reduce
 
 __author__ = 'isaac'
@@ -1356,11 +1361,11 @@ class NN(object):
             _shared_dataset(*self.preprocessor.get_test())
 
         # compute number of minibatches for training, validation and testing
-        n_train_batches = train_x.values()[0].get_value(
+        n_train_batches = list(train_x.values())[0].get_value(
             borrow=True).shape[0] // batch_size
-        n_valid_batches = valid_x.values()[0].get_value(
+        n_valid_batches = list(valid_x.values())[0].get_value(
             borrow=True).shape[0] // batch_size
-        n_test_batches = test_x.values()[0].get_value(
+        n_test_batches = list(test_x.values())[0].get_value(
             borrow=True).shape[0] // batch_size
 
         # create a list of all model parameters to be fit by gradient descent
@@ -1510,7 +1515,7 @@ class NN(object):
                     for key in new_train_x:
                         train_x[key].set_value(new_train_x[key])
                     train_y_uncast.set_value(new_train_y)
-                    n_final_batches = train_x.values()[0].get_value(borrow=True).shape[
+                    n_final_batches = list(train_x.values())[0].get_value(borrow=True).shape[
                                           0] // batch_size
 
                     train_loss, train_error = run_batches(train_model, n_final_batches)
@@ -1542,11 +1547,11 @@ class NN(object):
             new_shape[0] += amount
             return np.resize(data, tuple(new_shape))
 
-        num_padded = batch_size - data.values()[0].shape[0] % batch_size
+        num_padded = batch_size - list(data.values())[0].shape[0] % batch_size
         for key, value in data.items():
             data[key] = add_padding(value, num_padded)
 
-        num_batches = data.values()[0].shape[0] // batch_size
+        num_batches = list(data.values())[0].shape[0] // batch_size
 
         data = _shared_dataset(data, borrow=True)
 

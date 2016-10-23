@@ -1,4 +1,8 @@
 from __future__ import print_function
+from __future__ import division
+from builtins import str
+from builtins import object
+from past.utils import old_div
 from . import tools
 
 from os.path import join
@@ -50,7 +54,7 @@ class DirectoryLabeledImageSet(object):
         labels = self.get_labels()
 
         print('loading {} of 30336 images...'.format(num_images))
-        dotter = tools.Dot(skip=num_images / 20)
+        dotter = tools.Dot(skip=num_images // 20)
         for i, (fn, label) in enumerate(files):
             images[i] = imread(join(self.base_dir, label, fn))
             classes[i] = labels.index(label)

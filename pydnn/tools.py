@@ -1,4 +1,13 @@
 from __future__ import print_function
+from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import next
+from builtins import str
+from builtins import zip
+from builtins import range
+from past.utils import old_div
+from builtins import object
 __author__ = 'isaac'
 
 import smtplib
@@ -252,11 +261,12 @@ def default(variable, dfault):
 def num_abbrev(num, abbrev, sep):
     import math
     if num < 1:
-        return num
-    num = float(num)
-    millidx = max(0, min(len(abbrev) - 1,
-                         int(math.floor(math.log10(abs(num))/3))))
-    return '{:.0f}{}{}'.format(num / 10 ** (3 * millidx), sep, abbrev[millidx])
+        return str(num)
+    millidx = max(0, int(math.floor(math.log10(abs(num)) / 3)))
+    if millidx >= len(abbrev) - 1:
+        return abbrev[-1]
+    else:
+        return '{:.0f}{}{}'.format(num / 10 ** (3 * millidx), sep, abbrev[millidx])
 
 
 def human(num):

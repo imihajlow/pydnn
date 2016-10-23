@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 
 from __future__ import print_function
+from builtins import zip
+from builtins import str
 __author__ = 'isaac'
 
 '''
@@ -46,7 +48,7 @@ def get_recent_gpu_price(conn):
 
     zones = ['us-east-1' + l for l in ('a', 'b', 'd', 'e')]
     prices = [get_price_for_zone(z) for z in zones]
-    print(zip(zones, prices))
+    print(list(zip(zones, prices)))
     return max(prices), min(prices), zones[prices.index(min(prices))]
 
 
@@ -321,7 +323,7 @@ def handle_command_line():
                         conn.get_all_images(owners=['self'])
                         if image.name[0] != '_'}
                 if len(amis) == 1:
-                    return amis.values()[0].id, amis.values()[0]
+                    return list(amis.values())[0].id, list(amis.values())[0]
                 elif config['ec2']['default_name'] in amis:
                     return (amis[config['ec2']['default_name']].id,
                             config['ec2']['default_name'])

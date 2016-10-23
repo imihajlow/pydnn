@@ -1,4 +1,10 @@
 from __future__ import print_function
+from __future__ import division
+from builtins import zip
+from builtins import str
+from builtins import range
+from builtins import object
+from past.utils import old_div
 __author__ = 'isaac'
 
 import scipy
@@ -266,7 +272,7 @@ class StochasticStretchResizer(Resizer):
 
     def _crop_range(self, rand, fixed):
         if rand > fixed:
-            off = (rand - fixed) / 2
+            off = (rand - fixed) // 2
             return off, off + fixed
         else:
             return 0, fixed
@@ -549,7 +555,7 @@ class Rotator360PlusGeometry(object):
     def make_geometric_data(self, images):
         geoms = np.zeros(shape=(len(images), 2 + 2 + 1 + 2), dtype=self.dtype)
         print('calculating geometric data...')
-        dotter = tools.Dot(skip=len(images)/40)
+        dotter = tools.Dot(skip=len(images) // 40)
         for image, geom in zip(images, geoms):
             img, rot, ud, lr = _canonicalize_image(image, include_info_in_result=True)
             geom[0:2] = image.shape
@@ -812,7 +818,7 @@ class Canonicalizer(object):
         geoms = np.zeros(shape=(len(images), 2 + 2 + 1 + 2), dtype=self.dtype)
 
         print('canonicalizing {} images'.format(len(images)))
-        dotter = tools.Dot(skip=len(images) / 20)
+        dotter = tools.Dot(skip=len(images) // 20)
         for i, (img_arr, geom, image) in enumerate(zip(images_array, geoms, images)):
             img, rot, ud, lr = _canonicalize_image(image,
                                                   include_info_in_result=True)
