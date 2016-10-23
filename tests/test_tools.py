@@ -1,3 +1,4 @@
+from __future__ import print_function
 from pydnn import tools
 import unittest
 import tempfile

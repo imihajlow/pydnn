@@ -9,6 +9,7 @@ __pycache__/
 # temp files
 .~*#
 scratch
+*.bak
 
 # generate sphinx documentation
 docs/_build/
