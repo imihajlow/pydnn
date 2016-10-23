@@ -1,4 +1,4 @@
-import tools
+from . import tools
 
 from os.path import join
 import numpy as np
@@ -33,6 +33,7 @@ class DirectoryLabeledImageSet(object):
         else:
             import random
             random.seed(12345)
+            print("files:", files, num_files)
             return random.sample(files, num_files)
 
     def get_random_file(self, rng):

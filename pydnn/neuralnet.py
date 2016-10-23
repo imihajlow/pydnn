@@ -3,7 +3,10 @@ from __future__ import division
 __author__ = 'isaac'
 
 import operator
-import cPickle
+try:
+    import cPickle as pickle
+except:
+    import pickle
 import time
 import copy
 import numpy as np
@@ -14,7 +17,7 @@ from theano.tensor.nnet import conv
 from theano.ifelse import ifelse
 import theano.gof.graph
 import theano.printing
-import tools
+from . import tools
 from math import ceil
 import os
 
@@ -1647,7 +1650,7 @@ def save(nn, filename=None):
     :return: the filename
     """
     with open(filename, mode='wb') as f:
-        cPickle.dump(nn, f, protocol=cPickle.HIGHEST_PROTOCOL)
+        pickle.dump(nn, f, protocol=pickle.HIGHEST_PROTOCOL)
     return filename
 
 
@@ -1659,7 +1662,7 @@ def load(filename):
     :return: the :class:`NN` object loaded
     """
     with open(filename, mode='rb') as f:
-        return cPickle.load(f)
+        return pickle.load(f)
 
 
 # def _param_hash(params):

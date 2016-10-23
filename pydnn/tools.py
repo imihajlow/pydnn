@@ -5,7 +5,7 @@ import sys
 from email.mime.text import MIMEText
 import os
 import numpy
-from StringIO import StringIO
+from io import StringIO
 import datetime
 import time
 import yaml
@@ -15,7 +15,8 @@ def load_config(environ_variable, module_file, default_config):
     default_config = os.path.join(os.path.dirname(module_file), default_config)
     config = os.getenv(environ_variable, default_config)
     print('using config: ' + config)
-    return yaml.load(file(config))
+    with open(config) as file:
+        return yaml.load(file)
 
 
 def send_email(

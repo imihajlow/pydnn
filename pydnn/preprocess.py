@@ -3,7 +3,7 @@ __author__ = 'isaac'
 import scipy
 import scipy.ndimage
 import numpy as np
-import tools
+from . import tools
 import theano
 
 
@@ -48,13 +48,13 @@ def split_training_data(data, batch_size, train_per, valid_per, test_per):
     num_test = calc_num(test_per)
 
     # if there are enough residual observation to make a batch, add them to train
-    num_train += (num_obs - num_train - num_valid - num_test) / batch_size * batch_size
+    num_train += (num_obs - num_train - num_valid - num_test) // batch_size * batch_size
 
     # print out some sanity check numbers
     num_discard = num_obs - num_train - num_valid - num_test
     print("train: {} obs, {} batches; valid: {} obs, {} batches; test: {} obs, {} batches".
-          format(num_train, num_train / batch_size, num_valid, num_valid / batch_size,
-                 num_test, num_test / batch_size))
+          format(num_train, num_train // batch_size, num_valid, num_valid // batch_size,
+                 num_test, num_test // batch_size))
     print("of {} observations, {} are used and {} are discarded because they do not fit evenly into a batch of size {}".
           format(num_obs, num_obs - num_discard, num_discard, batch_size))
 
@@ -85,7 +85,7 @@ def split_training_data(data, batch_size, train_per, valid_per, test_per):
     #     from MyTools import tile_2d_images
     #
     #     for s in sets:
-    #         image = tile_2d_images(s[0], (batch_size / 20 + 1, 20))
+    #         image = tile_2d_images(s[0], (batch_size // 20 + 1, 20))
     #         scipy.misc.imshow(image)
 
     return sets
@@ -978,7 +978,7 @@ def _shuffle_lists(rng, lists):
     for l in lists:
         assert len(l) == length
 
-    for i in xrange(length):
+    for i in range(length):
         j = rng.randint(length - 1)
         for l in lists:             # must make copy in case l is an array:
             tmp = l[i].copy()       # l[i], l[j] = l[j], l[i] will not work

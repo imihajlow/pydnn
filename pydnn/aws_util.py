@@ -19,7 +19,7 @@ from time import sleep
 import argparse
 import subprocess
 import shlex
-import tools
+from . import tools
 
 config = tools.load_config('AWS_UTIL_CONFIG', __file__, 'aws_util.conf')
 
