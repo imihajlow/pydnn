@@ -39,6 +39,7 @@ setup(
         'Theano>=0.7.0rc1.dev',
         'pyyaml',
         'boto',
-        'pandas'],
+        'pandas',
+        'future'],
     extras_require={'docs': ['Sphinx']},
     )
